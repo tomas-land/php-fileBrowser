@@ -10,6 +10,36 @@
 
 <body>
 
+<!-- LOGIN--------------------------------- -->
+<?php
+session_start();
+$username="123";
+$password="123";
+
+if($_POST['username'] == $username && $_POST['password'] == $password){
+    header( 'Location:index.php' );
+}
+else
+{
+?>
+
+        <form  action="index.php" method='POST' >
+            <label for='username' >UserName:</label>
+            <input type='text' placeholder="123" name='username'  maxlength="50" />
+            <label for='password' >Password:</label>
+            <input type='text' name='password' placeholder="123" maxlength="50" />
+            <input type='submit' name='submit' value='Submit' />
+           
+        </form>
+
+<?php
+
+}
+?>
+
+
+
+<!-- CREATE FOLDER------------------------------ -->
     <?php
     
     $folder_name = $_POST['createfolder'];
@@ -27,6 +57,8 @@
         <input type="submit" value="Create Folder">
     </form>
     <br>
+
+<!-- MAIN------------------------ -->
 
     <?php
     $path = isset($_GET['path']) ? $_GET['path'] : './';
@@ -49,25 +81,41 @@
             
             print('<td>' .
                 '<a href=?path=' . $path . $file . '>' . $file . '</a>' .
-                '</td><td>');
-        print('<form  method="POST">');
-        print('<input type="submit" name="delete" value="Delete"/>');
-        print('</form>');
-        if(isset($_POST['delete'])){
-            rmdir($file);
-        }
-        ('</td></tr>');
+                '</td><td>
+                <form action="" method="POST">
+                <input type="hidden" name="delete" value="' . $file . '">
+                <button class="del_btn" type="submit">Delete</button>
+            </form>
+        
+        </td></tr>');
         }
     }
 
     print('</table>');
-    echo getcwd() . "\n";
-    // $file = $_GET['file'];
-    // rmdir($file);
+    
+    // DELETE BUTTON-------------------
+
+    if (isset($_POST['delete'])) {
+        $delete_file = $_GET['path'] . "/" . $_POST['delete'];
+                unlink($delete_file);
+                
+            }
+    
+
+
+
+    // BACK BUTTON--------------------
+    
+    function back_button($url) {
+        $url = dirname($_SERVER['REQUEST_URI']);
+        print("<div><button><a href='$url'>BACK</a></button></div>");
+    }
+    back_button($url_back_2);
     ?>
 
 
-    <input type="button" value="Back" onClick="history.back();return true;">
+
+    
 
 
 
